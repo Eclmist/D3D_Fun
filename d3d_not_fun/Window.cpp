@@ -38,7 +38,7 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
     return wndClass.hInst;
 }
 
-Window::Window(int width, int height, const char* name)
+Window::Window(int width, int height, const char* name) : width(width), height(height)
 {
     RECT wr;
     wr.left = 0;
@@ -123,7 +123,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     case WM_KEYDOWN:
     case WM_SYSKEYDOWN:
         // Implicitly disable auto repeat
-        if (!(lParam & 0x40000000)  || kbd.AutorepeatIsEnabled())
+        if (!(lParam & 0x40000000) || kbd.AutorepeatIsEnabled())
             kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
         break;
     case WM_KEYUP:
@@ -133,6 +133,76 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     case WM_CHAR:
         kbd.OnChar(static_cast<unsigned char>(wParam));
         break;
+    case WM_MOUSEMOVE:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+
+        // In client region
+        if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height)
+        {
+            mouse.OnMouseMove(pt.x, pt.y);
+
+            if (!mouse.IsInWindow())
+            {
+                SetCapture(hWnd);
+                mouse.OnMouseEnter();
+            }
+        }
+        else 
+        {
+            if ((wParam & (MK_LBUTTON | MK_RBUTTON)) != 0) 
+            {
+                POINTS ptClamped = pt;
+                ptClamped.x = std::max(0, std::min(static_cast<int>(ptClamped.x), width));
+                ptClamped.y = std::max(0, std::min(static_cast<int>(ptClamped.y), width));
+                mouse.OnMouseMove(ptClamped.x, ptClamped.y);
+            }
+            else
+            {
+                ReleaseCapture();
+                mouse.OnMouseLeave();
+            }
+        }
+
+        break;
+    }
+    case WM_LBUTTONDOWN:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+        mouse.OnLeftPressed(pt.x, pt.y);
+        break;
+    }
+    case WM_RBUTTONDOWN:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+        mouse.OnRightPressed(pt.x, pt.y);
+        break;
+    }
+    case WM_LBUTTONUP:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+        mouse.OnLeftReleased(pt.x, pt.y);
+        break;
+    }
+    case WM_RBUTTONUP:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+        mouse.OnRightReleased(pt.x, pt.y);
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+        if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
+        {
+            mouse.OnWheelUp(pt.x, pt.y);
+        }
+        else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+        {
+            mouse.OnWheelDown(pt.x, pt.y);
+        }
+        break;
+    }
     }
 
     return DefWindowProc(hWnd, msg, wParam, lParam);
