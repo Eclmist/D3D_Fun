@@ -117,6 +117,20 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         // we don't want the DefProc to handle this message because
         // we want our destructor to destroy the window, so return 0 instead of break
         return 0;
+    case WM_KILLFOCUS:
+        kbd.ClearState();
+        break;
+    case WM_KEYDOWN:
+        // Implicitly disable auto repeat
+        if (!(lParam & 0x40000000)  || kbd.AutorepeatIsEnabled())
+            kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
+        break;
+    case WM_KEYUP:
+        kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
+        break;
+    case WM_CHAR:
+        kbd.OnChar(static_cast<unsigned char>(wParam));
+        break;
     }
 
     return DefWindowProc(hWnd, msg, wParam, lParam);

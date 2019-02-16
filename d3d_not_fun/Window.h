@@ -1,6 +1,7 @@
 #pragma once
 #include "EclWin.h"
 #include "EclException.h"
+#include "Keyboard.h"
 
 #define CHWND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr) 
 #define CHWND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError()) 
@@ -42,6 +43,9 @@ public:
     ~Window();
     Window(const WindowClass&) = delete;
     Window& operator=(const WindowClass&) = delete;
+
+public:
+    Keyboard kbd;
 
 private:
     static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;

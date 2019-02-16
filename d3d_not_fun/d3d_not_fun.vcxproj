@@ -146,12 +146,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EclException.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EclException.h" />
     <ClInclude Include="EclWin.h" />
+    <ClInclude Include="Keyboard.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
