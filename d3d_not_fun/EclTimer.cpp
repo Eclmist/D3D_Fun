@@ -7,7 +7,7 @@ EclTimer::EclTimer()
     m_last = steady_clock::now();
 }
 
-float EclTimer::mark()
+float EclTimer::mark() noexcept
 {
     const auto old = m_last;
     m_last = steady_clock::now();
@@ -15,7 +15,7 @@ float EclTimer::mark()
     return frameTime.count();
 }
 
-float EclTimer::peek() const
+float EclTimer::peek() const noexcept
 {
     return duration<float>(steady_clock::now() - m_last).count();
 }

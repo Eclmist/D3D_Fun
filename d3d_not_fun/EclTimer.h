@@ -5,8 +5,8 @@ class EclTimer
 {
 public:
     EclTimer();
-    float mark();
-    float peek() const;
+    float mark() noexcept;
+    float peek() const noexcept;
 
 private:
     std::chrono::steady_clock::time_point m_last;
