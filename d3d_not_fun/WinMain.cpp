@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "EclApp.h"
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
@@ -8,25 +9,7 @@ int CALLBACK WinMain(
 {
     try
     {
-        Window wnd(800, 480, "Fun.exe");
-
-        MSG msg;
-        BOOL gResult;
-        while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0)
-        {
-            // TranslateMessage will post auxiliary WM_CHAR messages from key msgs
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-
-        // check if GetMessage call itself borked
-        if (gResult == -1)
-        {
-            return -1;
-        }
-
-        // wParam here is the value passed to PostQuitMessage
-        return msg.wParam;
+        return EclApp{}.Start();
     }
     catch (const EclException& e)
     {

@@ -76,6 +76,32 @@ Window::~Window()
     DestroyWindow(hWnd);
 }
 
+void Window::SetTitle(const std::string & title)
+{
+    if (SetWindowText(hWnd, title.c_str()) == 0)
+    {
+        throw CHWND_LAST_EXCEPT();
+    }
+}
+
+std::optional<int> Window::ProcessMessages()
+{
+    MSG msg;
+
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+    {
+        if (msg.message == WM_QUIT)
+        {
+            return msg.wParam;
+        }
+
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return std::optional<int>();
+}
+
 /**
  * Basically allows us to use a custom function for handling of windows messages
  * by sneaking a pointer to our Window class into lParams and extracting it when

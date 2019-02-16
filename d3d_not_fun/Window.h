@@ -3,6 +3,7 @@
 #include "EclException.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include <optional>
 
 #define CHWND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr) 
 #define CHWND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError()) 
@@ -44,6 +45,8 @@ public:
     ~Window();
     Window(const WindowClass&) = delete;
     Window& operator=(const WindowClass&) = delete;
+    void SetTitle(const std::string& title);
+    static std::optional<int> ProcessMessages();
 
 public:
     Keyboard kbd;
