@@ -5,10 +5,10 @@ class EclTimer
 {
 public:
     EclTimer();
-    float Mark();
-    float Peek() const;
+    float mark();
+    float peek() const;
 
 private:
-    std::chrono::steady_clock::time_point last;
+    std::chrono::steady_clock::time_point m_last;
 };
 

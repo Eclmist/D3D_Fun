@@ -9,11 +9,11 @@ int CALLBACK WinMain(
 {
     try
     {
-        return EclApp{}.Start();
+        return EclApp{}.start();
     }
     catch (const EclException& e)
     {
-        MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
+        MessageBox(nullptr, e.what(), e.getType(), MB_OK | MB_ICONEXCLAMATION);
     }
     catch (const std::exception& e)
     {

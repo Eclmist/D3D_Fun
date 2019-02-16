@@ -21,19 +21,19 @@ public:
     public:
         Event() noexcept : type(Type::Invalid), code(0u) {}
         Event(Type type, unsigned char code) noexcept : type(type), code(code) {}
-        bool IsPress() const noexcept
+        bool isPress() const noexcept
         {
             return type == Type::Press;
         }
-        bool IsRelease() const noexcept
+        bool isRelease() const noexcept
         {
             return type == Type::Release;
         }
-        bool IsValid() const noexcept
+        bool isValid() const noexcept
         {
             return type != Type::Invalid;
         }
-        unsigned char GetCode() const noexcept
+        unsigned char getCode() const noexcept
         {
             return code;
         }
@@ -43,31 +43,31 @@ public:
     Keyboard(const Keyboard&) = delete;
     Keyboard& operator=(const Keyboard&) = delete;
 
-    bool KeyIsPressed(unsigned char keycode) const noexcept;
-    Event ReadKey() noexcept;
-    bool KeyIsEmpty() const noexcept;
-    void FlushKey() noexcept;
+    bool keyIsPressed(unsigned char keycode) const noexcept;
+    Event readKey() noexcept;
+    bool keyIsEmpty() const noexcept;
+    void flushKey() noexcept;
 
-    char ReadChar() noexcept;
-    bool CharIsEmpty() const noexcept;
-    void FlushChar() noexcept;
-    void Flush() noexcept;
+    char readChar() noexcept;
+    bool charIsEmpty() const noexcept;
+    void flushChar() noexcept;
+    void flush() noexcept;
 
-    void EnableAutorepeat() noexcept;
-    void DisableAutorepeat() noexcept;
-    bool AutorepeatIsEnabled() const noexcept;
+    void enableAutorepeat() noexcept;
+    void disableAutorepeat() noexcept;
+    bool autorepeatIsEnabled() const noexcept;
 private:
-    void OnKeyPressed(unsigned char keycode) noexcept;
-    void OnKeyReleased(unsigned char keycode) noexcept;
-    void OnChar(char character) noexcept;
-    void ClearState() noexcept;
+    void onKeyPressed(unsigned char keycode) noexcept;
+    void onKeyReleased(unsigned char keycode) noexcept;
+    void onChar(char character) noexcept;
+    void clearState() noexcept;
     template<typename T>
-    static void TrimBuffer(std::queue<T>& buffer) noexcept;
+    static void trimBuffer(std::queue<T>& buffer) noexcept;
 private:
-    static constexpr unsigned int nKeys = 256u;
-    static constexpr unsigned int bufferSize = 16u;
-    bool autorepeatEnabled = false;
-    std::bitset<nKeys> keystates;
-    std::queue<Event> keybuffer;
-    std::queue<char> charbuffer;
+    static constexpr unsigned int m_nKeys = 256u;
+    static constexpr unsigned int m_bufferSize = 16u;
+    bool m_autorepeatEnabled = false;
+    std::bitset<m_nKeys> m_keystates;
+    std::queue<Event> m_keybuffer;
+    std::queue<char> m_charbuffer;
 };

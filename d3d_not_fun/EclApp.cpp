@@ -2,22 +2,22 @@
 #include <sstream>
 #include <iomanip>
 
-EclApp::EclApp() : wnd(800, 480, "EclApp") {}
+EclApp::EclApp() : m_wnd(800, 480, "EclApp") {}
 
-int EclApp::Start()
+int EclApp::start()
 {
     while (true)
     {
-        if (const auto exitCode = Window::ProcessMessages())
+        if (const auto exitCode = Window::processMessages())
         {
             return *exitCode;
         }
 
-        Update();
+        update();
     }
 }
 
-void EclApp::Update()
+void EclApp::update()
 {
 
 }

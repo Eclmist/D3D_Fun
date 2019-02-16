@@ -22,92 +22,92 @@ public:
             Invalid
         };
     private:
-        Type type;
-        bool leftIsPressed;
-        bool rightIsPressed;
-        int x;
-        int y;
+        Type m_type;
+        bool m_leftIsPressed;
+        bool m_rightIsPressed;
+        int m_posX;
+        int m_posY;
     public:
         Event() noexcept
             :
-            type(Type::Invalid),
-            leftIsPressed(false),
-            rightIsPressed(false),
-            x(0),
-            y(0)
+            m_type(Type::Invalid),
+            m_leftIsPressed(false),
+            m_rightIsPressed(false),
+            m_posX(0),
+            m_posY(0)
         {}
         Event(Type type, const Mouse& parent) noexcept
             :
-            type(type),
-            leftIsPressed(parent.leftIsPressed),
-            rightIsPressed(parent.rightIsPressed),
-            x(parent.x),
-            y(parent.y)
+            m_type(type),
+            m_leftIsPressed(parent.m_leftIsPressed),
+            m_rightIsPressed(parent.m_rightIsPressed),
+            m_posX(parent.m_posX),
+            m_posY(parent.m_posY)
         {}
-        bool IsValid() const noexcept
+        bool isValid() const noexcept
         {
-            return type != Type::Invalid;
+            return m_type != Type::Invalid;
         }
-        Type GetType() const noexcept
+        Type getType() const noexcept
         {
-            return type;
+            return m_type;
         }
-        std::pair<int, int> GetPos() const noexcept
+        std::pair<int, int> getPos() const noexcept
         {
-            return{ x,y };
+            return{ m_posX, m_posY };
         }
-        int GetPosX() const noexcept
+        int getPosX() const noexcept
         {
-            return x;
+            return m_posX;
         }
-        int GetPosY() const noexcept
+        int getPosY() const noexcept
         {
-            return y;
+            return m_posY;
         }
-        bool LeftIsPressed() const noexcept
+        bool leftIsPressed() const noexcept
         {
-            return leftIsPressed;
+            return m_leftIsPressed;
         }
-        bool RightIsPressed() const noexcept
+        bool rightIsPressed() const noexcept
         {
-            return rightIsPressed;
+            return m_rightIsPressed;
         }
     };
 public:
     Mouse() = default;
     Mouse(const Mouse&) = delete;
     Mouse& operator=(const Mouse&) = delete;
-    std::pair<int, int> GetPos() const noexcept;
-    int GetPosX() const noexcept;
-    int GetPosY() const noexcept;
-    bool IsInWindow() const noexcept;
-    bool LeftIsPressed() const noexcept;
-    bool RightIsPressed() const noexcept;
-    Mouse::Event Read() noexcept;
-    bool IsEmpty() const noexcept
+    std::pair<int, int> getPos() const noexcept;
+    int getPosX() const noexcept;
+    int getPosY() const noexcept;
+    bool isInWindow() const noexcept;
+    bool leftIsPressed() const noexcept;
+    bool rightIsPressed() const noexcept;
+    Mouse::Event read() noexcept;
+    bool isEmpty() const noexcept
     {
-        return buffer.empty();
+        return m_buffer.empty();
     }
-    void Flush() noexcept;
+    void flush() noexcept;
 private:
-    void OnMouseMove(int x, int y) noexcept;
-    void OnMouseEnter() noexcept;
-    void OnMouseLeave() noexcept;
-    void OnLeftPressed(int x, int y) noexcept;
-    void OnLeftReleased(int x, int y) noexcept;
-    void OnRightPressed(int x, int y) noexcept;
-    void OnRightReleased(int x, int y) noexcept;
-    void OnWheelUp(int x, int y) noexcept;
-    void OnWheelDown(int x, int y) noexcept;
-    void OnWheelDelta(int x, int y, int delta) noexcept;
-    void TrimBuffer() noexcept;
+    void onMouseMove(int x, int y) noexcept;
+    void onMouseEnter() noexcept;
+    void onMouseLeave() noexcept;
+    void onLeftPressed(int x, int y) noexcept;
+    void onLeftReleased(int x, int y) noexcept;
+    void onRightPressed(int x, int y) noexcept;
+    void onRightReleased(int x, int y) noexcept;
+    void onWheelUp(int x, int y) noexcept;
+    void onWheelDown(int x, int y) noexcept;
+    void onWheelDelta(int x, int y, int delta) noexcept;
+    void trimBuffer() noexcept;
 private:
-    static constexpr unsigned int bufferSize = 16u;
-    int x;
-    int y;
-    bool leftIsPressed = false;
-    bool rightIsPressed = false;
-    bool isInWindow = false;
-    int wheelDeltaCarry = 0;
-    std::queue<Event> buffer;
+    static constexpr unsigned int m_bufferSize = 16u;
+    int m_posX;
+    int m_posY;
+    bool m_leftIsPressed = false;
+    bool m_rightIsPressed = false;
+    bool m_isInWindow = false;
+    int m_wheelDeltaCarry = 0;
+    std::queue<Event> m_buffer;
 };

@@ -6,11 +6,11 @@ class EclApp
 {
 public:
     EclApp();
-    int Start();
+    int start();
 private:
-    void Update();
+    void update();
 private:
-    Window wnd;
-    EclTimer timer;
+    Window m_wnd;
+    EclTimer m_timer;
 };
 
