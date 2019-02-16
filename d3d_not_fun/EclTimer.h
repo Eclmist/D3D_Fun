@@ -4,7 +4,7 @@
 class EclTimer
 {
 public:
-    EclTimer();
+    EclTimer() noexcept;
     float mark() noexcept;
     float peek() const noexcept;
 

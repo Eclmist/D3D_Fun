@@ -2,7 +2,7 @@
 
 using namespace std::chrono;
 
-EclTimer::EclTimer()
+EclTimer::EclTimer() noexcept
 {
     m_last = steady_clock::now();
 }

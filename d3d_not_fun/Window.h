@@ -45,7 +45,7 @@ public:
     ~Window();
     Window(const WindowClass&) = delete;
     Window& operator=(const WindowClass&) = delete;
-    void SetTitle(const std::string& title);
+    void setTitle(const std::string& title);
     static std::optional<int> processMessages();
 
 public:

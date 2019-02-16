@@ -76,7 +76,7 @@ Window::~Window()
     DestroyWindow(m_hWnd);
 }
 
-void Window::SetTitle(const std::string & title)
+void Window::setTitle(const std::string & title)
 {
     if (SetWindowText(m_hWnd, title.c_str()) == 0)
     {
@@ -92,14 +92,14 @@ std::optional<int> Window::processMessages()
     {
         if (msg.message == WM_QUIT)
         {
-            return msg.wParam;
+            return (int)msg.wParam;
         }
 
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
 
-    return std::optional<int>();
+    return {};
 }
 
 /**
