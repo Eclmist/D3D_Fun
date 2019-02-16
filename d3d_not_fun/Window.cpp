@@ -1,11 +1,12 @@
 #include "Window.h"
+#include <sstream>
 
 Window::WindowClass Window::WindowClass::wndClass;
 
 Window::WindowClass::WindowClass() noexcept : hInst(GetModuleHandle(nullptr))
 {
     // Registers window class properties
-    WNDCLASSEX wc = {0};
+    WNDCLASSEX wc = { 0 };
     wc.cbSize = sizeof(wc);
     wc.style = CS_OWNDC;
     wc.lpfnWndProc = HandleMsgSetup;
@@ -36,7 +37,7 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
     return wndClass.hInst;
 }
 
-Window::Window(int width, int height, const char* name) noexcept
+Window::Window(int width, int height, const char* name)
 {
     RECT wr;
     wr.left = 0;
@@ -45,7 +46,9 @@ Window::Window(int width, int height, const char* name) noexcept
     wr.bottom = height;
 
     // Ensure that width and height is only inclusive of client region
-    AdjustWindowRect(&wr, WS_CAPTION | WS_SYSMENU, false);
+    HRESULT hr = AdjustWindowRect(&wr, WS_CAPTION | WS_SYSMENU, false);
+
+    if (FAILED(hr)) throw CHWND_LAST_EXCEPT();
 
     // Create window and get HWND
     hWnd = CreateWindow(
@@ -61,6 +64,8 @@ Window::Window(int width, int height, const char* name) noexcept
         WindowClass::GetInstance(),
         this
     );
+
+    if (hWnd == nullptr) throw CHWND_LAST_EXCEPT();
 
     ShowWindow(hWnd, SW_SHOWDEFAULT);
 }
@@ -114,4 +119,50 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     }
 
     return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+Window::Exception::Exception(int line, const char * file, HRESULT hr) noexcept : EclException(line, file), hr(hr) { }
+
+const char * Window::Exception::what() const noexcept
+{
+    std::ostringstream oss;
+    oss << GetType() << std::endl
+        << "[Error Code] " << GetErrorCode() << std::endl
+        << "[Description] " << GetErrorString() << std::endl
+        << GetOriginString();
+    whatBuffer = oss.str();
+    return whatBuffer.c_str();
+}
+
+const char* Window::Exception::GetType() const noexcept
+{
+    return "Window Exception";
+}
+
+std::string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
+{
+    char* pMsgBuf = nullptr;
+    DWORD nMsgLen = FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER |
+        FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+        nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        reinterpret_cast<LPSTR>(&pMsgBuf), 0, nullptr
+    );
+    if (nMsgLen == 0)
+    {
+        return "Unidentified error code";
+    }
+    std::string errorString = pMsgBuf;
+    LocalFree(pMsgBuf);
+    return errorString;
+}
+
+HRESULT Window::Exception::GetErrorCode() const noexcept
+{
+    return hr;
+}
+
+std::string Window::Exception::GetErrorString() const noexcept
+{
+    return TranslateErrorCode(hr);
 }

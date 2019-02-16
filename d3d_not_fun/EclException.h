@@ -19,4 +19,3 @@ private:
     int line;
     std::string file;
 };
-
