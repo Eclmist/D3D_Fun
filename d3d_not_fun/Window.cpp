@@ -121,11 +121,13 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         kbd.ClearState();
         break;
     case WM_KEYDOWN:
+    case WM_SYSKEYDOWN:
         // Implicitly disable auto repeat
         if (!(lParam & 0x40000000)  || kbd.AutorepeatIsEnabled())
             kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
         break;
     case WM_KEYUP:
+    case WM_SYSKEYUP:
         kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
         break;
     case WM_CHAR:
