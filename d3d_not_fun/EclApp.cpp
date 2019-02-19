@@ -1,21 +1,21 @@
-#include "EclApp.h"
+#include "eclapp.h"
 #include <sstream>
 
-EclApp::EclApp() : m_wnd(800, 480, "EclApp") {}
+EclApp::EclApp() : m_Wnd(1366, 768, "EclApp") {}
 
-int EclApp::start()
+int EclApp::Start()
 {
     while (true)
     {
-        if (const auto exitCode = Window::processMessages())
+        if (const auto exitCode = Window::ProcessMessages())
         {
             return *exitCode;
         }
 
-        update();
+        Update();
     }
 }
 
-void EclApp::update()
+void EclApp::Update()
 {
 }

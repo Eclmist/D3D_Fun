@@ -145,23 +145,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EclApp.cpp" />
-    <ClCompile Include="EclException.cpp" />
-    <ClCompile Include="EclTimer.cpp" />
-    <ClCompile Include="Keyboard.cpp" />
-    <ClCompile Include="Mouse.cpp" />
-    <ClCompile Include="Window.cpp" />
-    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="eclapp.cpp" />
+    <ClCompile Include="eclexception.cpp" />
+    <ClCompile Include="ecltimer.cpp" />
+    <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="mouse.cpp" />
+    <ClCompile Include="window.cpp" />
+    <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EclApp.h" />
-    <ClInclude Include="EclException.h" />
-    <ClInclude Include="EclTimer.h" />
-    <ClInclude Include="EclWin.h" />
-    <ClInclude Include="Keyboard.h" />
-    <ClInclude Include="Mouse.h" />
+    <ClInclude Include="eclapp.h" />
+    <ClInclude Include="eclexception.h" />
+    <ClInclude Include="ecltimer.h" />
+    <ClInclude Include="eclwin.h" />
+    <ClInclude Include="keyboard.h" />
+    <ClInclude Include="mouse.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="d3d_not_fun.rc" />

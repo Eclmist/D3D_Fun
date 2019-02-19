@@ -1,41 +1,41 @@
-#include "EclException.h"
+#include "eclexception.h"
 #include <sstream>
 
 EclException::EclException(int line, const char * file) noexcept
 {
-    this->m_line = line;
-    this->m_file = file;
+    this->m_Line = line;
+    this->m_File = file;
 }
 
 const char* EclException::what() const noexcept
 {
     std::ostringstream oss;
-    oss << getType() << std::endl
-        << getOriginString();
+    oss << GetType() << std::endl
+        << GetOriginString();
 
     whatBuffer = oss.str();
     return whatBuffer.c_str();
 }
 
-const char* EclException::getType() const noexcept
+const char* EclException::GetType() const noexcept
 {
 	return "EclException";
 }
 
-int EclException::getLine() const noexcept
+int EclException::GetLine() const noexcept
 {
-	return m_line;
+	return m_Line;
 }
 
-const std::string& EclException::getFile() const noexcept
+const std::string& EclException::GetFile() const noexcept
 {
-	return m_file;
+	return m_File;
 }
 
-std::string EclException::getOriginString() const noexcept
+std::string EclException::GetOriginString() const noexcept
 {
 	std::ostringstream oss;
-	oss << "[File] " << m_file << std::endl
-		<< "[Line] " << m_line;
+	oss << "[File] " << m_File << std::endl
+		<< "[Line] " << m_Line;
 	return oss.str();
 } 

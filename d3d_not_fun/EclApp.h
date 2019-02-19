@@ -1,16 +1,16 @@
 #pragma once
-#include "Window.h"
-#include "EclTimer.h"
+#include "window.h"
+#include "ecltimer.h"
 
 class EclApp
 {
 public:
     EclApp();
-    int start();
+    int Start();
 private:
-    void update();
+    void Update();
 private:
-    Window m_wnd;
-    EclTimer m_timer;
+    Window m_Wnd;
+    EclTimer m_Timer;
 };
 

@@ -1,8 +1,8 @@
 #pragma once
-#include "EclWin.h"
-#include "EclException.h"
-#include "Keyboard.h"
-#include "Mouse.h"
+#include "eclwin.h"
+#include "eclexception.h"
+#include "keyboard.h"
+#include "mouse.h"
 #include <optional>
 
 #define CHWND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr) 
@@ -16,10 +16,10 @@ public:
     public:
         Exception(int line, const char* file, HRESULT hr) noexcept;
         const char* what() const noexcept override;
-        virtual const char* getType() const noexcept;
-        static std::string translateErrorCode(HRESULT hr) noexcept;
-        HRESULT getErrorCode() const noexcept;
-        std::string getErrorString() const noexcept;
+        virtual const char* GetType() const noexcept;
+        static std::string TranslateErrorCode(HRESULT hr) noexcept;
+        HRESULT GetErrorCode() const noexcept;
+        std::string GetErrorString() const noexcept;
     private:
         HRESULT hr;
     };
@@ -28,8 +28,8 @@ private:
     class WindowClass
     {
     public:
-        static const char* getName() noexcept;
-        static HINSTANCE getInstance() noexcept;
+        static const char* GetName() noexcept;
+        static HINSTANCE GetInstance() noexcept;
     private:
         WindowClass() noexcept;
         ~WindowClass();
@@ -41,24 +41,24 @@ private:
     };
 
 public:
-    Window(int width, int height, const char* name);
+    Window(int m_Width, int m_Height, const char* name);
     ~Window();
     Window(const WindowClass&) = delete;
     Window& operator=(const WindowClass&) = delete;
-    void setTitle(const std::string& title);
-    static std::optional<int> processMessages();
+    void SetTitle(const std::string& title);
+    static std::optional<int> ProcessMessages();
 
 public:
-    Keyboard kbd;
-    Mouse mouse;
+    Keyboard m_Kbd;
+    Mouse m_Mouse;
 
 private:
-    static LRESULT CALLBACK handleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
-    static LRESULT CALLBACK handleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
-    LRESULT handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+    static LRESULT CALLBACK HandleMsgSetup(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+    static LRESULT CALLBACK HandleMsgThunk(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+    LRESULT HandleMsg(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
 private:
-    int m_width;
-    int m_height;
-    HWND m_hWnd;
+    int m_Width;
+    int m_Height;
+    HWND m_Hwnd;
 };

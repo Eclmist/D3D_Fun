@@ -1,5 +1,5 @@
-#include "Window.h"
-#include "EclApp.h"
+#include "window.h"
+#include "eclapp.h"
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
@@ -9,11 +9,11 @@ int CALLBACK WinMain(
 {
     try
     {
-        return EclApp{}.start();
+        return EclApp{}.Start();
     }
     catch (const EclException& e)
     {
-        MessageBox(nullptr, e.what(), e.getType(), MB_OK | MB_ICONEXCLAMATION);
+        MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
     }
     catch (const std::exception& e)
     {
