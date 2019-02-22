@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ECL_APP_H__
+#define __ECL_APP_H__
 #include "window.h"
 #include "ecltimer.h"
 
@@ -14,3 +15,4 @@ private:
     EclTimer m_Timer;
 };
 
+#endif // !__ECL_APP_H__

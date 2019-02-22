@@ -1,9 +1,13 @@
-#pragma once
+#ifndef __WINDOW_H__
+#define __WINDOW_H__
+
 #include "eclwin.h"
 #include "eclexception.h"
 #include "keyboard.h"
 #include "mouse.h"
+#include "graphics.h"
 #include <optional>
+#include <memory>
 
 #define CHWND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr) 
 #define CHWND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError()) 
@@ -47,18 +51,22 @@ public:
     Window& operator=(const WindowClass&) = delete;
     void SetTitle(const std::string& title);
     static std::optional<int> ProcessMessages();
+    Graphics& Gfx();
 
 public:
     Keyboard m_Kbd;
     Mouse m_Mouse;
 
 private:
-    static LRESULT CALLBACK HandleMsgSetup(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
-    static LRESULT CALLBACK HandleMsgThunk(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
-    LRESULT HandleMsg(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+    static LRESULT CALLBACK HandleMsgSetup(HWND m_hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+    static LRESULT CALLBACK HandleMsgThunk(HWND m_hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+    LRESULT HandleMsg(HWND m_hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
 private:
     int m_Width;
     int m_Height;
-    HWND m_Hwnd;
+    HWND m_hWnd;
+    std::unique_ptr<Graphics> m_pGraphics;
 };
+
+#endif // !__WINDOW_H__

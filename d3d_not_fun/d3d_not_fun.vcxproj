@@ -148,6 +148,7 @@
     <ClCompile Include="eclapp.cpp" />
     <ClCompile Include="eclexception.cpp" />
     <ClCompile Include="ecltimer.cpp" />
+    <ClCompile Include="graphics.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="window.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="eclexception.h" />
     <ClInclude Include="ecltimer.h" />
     <ClInclude Include="eclwin.h" />
+    <ClInclude Include="graphics.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="resource.h" />

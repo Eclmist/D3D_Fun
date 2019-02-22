@@ -45,6 +45,11 @@ Mouse::Event Mouse::Read() noexcept
     }
 }
 
+bool Mouse::IsEmpty() const noexcept
+{
+    return m_Buffer.empty();
+}
+
 void Mouse::Flush() noexcept
 {
     m_Buffer = std::queue<Event>();

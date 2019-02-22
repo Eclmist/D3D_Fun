@@ -52,7 +52,7 @@ Window::Window(int m_Width, int m_Height, const char* name) : m_Width(m_Width), 
     if (FAILED(hr)) throw CHWND_LAST_EXCEPT();
 
     // Create window and get HWND
-    m_Hwnd = CreateWindow(
+    m_hWnd = CreateWindow(
         WindowClass::GetName(),
         name,
         WS_CAPTION | WS_SYSMENU,
@@ -66,19 +66,21 @@ Window::Window(int m_Width, int m_Height, const char* name) : m_Width(m_Width), 
         this
     );
 
-    if (m_Hwnd == nullptr) throw CHWND_LAST_EXCEPT();
+    if (m_hWnd == nullptr) throw CHWND_LAST_EXCEPT();
 
-    ShowWindow(m_Hwnd, SW_SHOWDEFAULT);
+    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+
+    m_pGraphics = std::make_unique<Graphics>(m_hWnd);
 }
 
 Window::~Window()
 {
-    DestroyWindow(m_Hwnd);
+    DestroyWindow(m_hWnd);
 }
 
 void Window::SetTitle(const std::string & title)
 {
-    if (SetWindowText(m_Hwnd, title.c_str()) == 0)
+    if (SetWindowText(m_hWnd, title.c_str()) == 0)
     {
         throw CHWND_LAST_EXCEPT();
     }
@@ -102,12 +104,17 @@ std::optional<int> Window::ProcessMessages()
     return {};
 }
 
+Graphics & Window::Gfx()
+{
+    return *m_pGraphics;
+}
+
 /**
  * Basically allows us to use a custom function for handling of windows messages
  * by sneaking a pointer to our Window class into lParams and extracting it when
  * the window is created
  */
-LRESULT CALLBACK Window::HandleMsgSetup(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+LRESULT CALLBACK Window::HandleMsgSetup(HWND m_hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
     // use create parameter passed in from CreateWindow() to store window class pointer at WinAPI side
     if (msg == WM_NCCREATE)
@@ -116,25 +123,25 @@ LRESULT CALLBACK Window::HandleMsgSetup(HWND m_Hwnd, UINT msg, WPARAM wParam, LP
         const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
         Window* const pWnd = static_cast<Window*>(pCreate->lpCreateParams);
         // set WinAPI-managed user data to store ptr to window class
-        SetWindowLongPtr(m_Hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
+        SetWindowLongPtr(m_hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
         // set message proc to normal (non-setup) handler now that setup is finished
-        SetWindowLongPtr(m_Hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::HandleMsgThunk));
+        SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::HandleMsgThunk));
         // forward message to window class handler
-        return pWnd->HandleMsg(m_Hwnd, msg, wParam, lParam);
+        return pWnd->HandleMsg(m_hWnd, msg, wParam, lParam);
     }
     // if we get a message before the WM_NCCREATE message, handle with default handler
-    return DefWindowProc(m_Hwnd, msg, wParam, lParam);
+    return DefWindowProc(m_hWnd, msg, wParam, lParam);
 }
 
-LRESULT CALLBACK Window::HandleMsgThunk(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+LRESULT CALLBACK Window::HandleMsgThunk(HWND m_hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
     // retrieve ptr to window class
-    Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(m_Hwnd, GWLP_USERDATA));
+    Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(m_hWnd, GWLP_USERDATA));
     // forward message to window class handler
-    return pWnd->HandleMsg(m_Hwnd, msg, wParam, lParam);
+    return pWnd->HandleMsg(m_hWnd, msg, wParam, lParam);
 }
 
-LRESULT Window::HandleMsg(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+LRESULT Window::HandleMsg(HWND m_hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
     switch (msg)
     {
@@ -170,7 +177,7 @@ LRESULT Window::HandleMsg(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) n
 
             if (!m_Mouse.IsInWindow())
             {
-                SetCapture(m_Hwnd);
+                SetCapture(m_hWnd);
                 m_Mouse.OnMouseEnter();
             }
         }
@@ -225,7 +232,7 @@ LRESULT Window::HandleMsg(HWND m_Hwnd, UINT msg, WPARAM wParam, LPARAM lParam) n
     }
     }
 
-    return DefWindowProc(m_Hwnd, msg, wParam, lParam);
+    return DefWindowProc(m_hWnd, msg, wParam, lParam);
 }
 
 Window::Exception::Exception(int line, const char * file, HRESULT hr) noexcept : EclException(line, file), hr(hr) { }
